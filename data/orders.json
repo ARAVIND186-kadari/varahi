@@ -1,0 +1,52 @@
+[
+  {
+    "id": "VT-2026-0002",
+    "customerName": "KADARI ARAVIND",
+    "customerPhone": "09392418845",
+    "orderType": "pickup",
+    "deliveryAddress": "",
+    "items": [
+      {
+        "id": "item-1",
+        "name": "Ghee Karam Dosa",
+        "price": 80,
+        "quantity": 1,
+        "itemTotal": 80
+      }
+    ],
+    "subtotal": 80,
+    "deliveryFee": 0,
+    "packagingFee": 15,
+    "tax": 4,
+    "grandTotal": 99,
+    "specialInstructions": "less oil",
+    "channel": "whatsapp",
+    "status": "Awaiting WhatsApp Confirmation",
+    "createdAt": "2026-10-23T15:32:25.853Z"
+  },
+  {
+    "id": "VT-2026-0001",
+    "customerName": "Suresh Kumar",
+    "customerPhone": "9876543210",
+    "orderType": "delivery",
+    "deliveryAddress": "Flat 302, TNR Apartment, Kothapet, Hyderabad",
+    "items": [
+      {
+        "id": "item-1",
+        "name": "Ghee Karam Dosa",
+        "price": 80,
+        "quantity": 2,
+        "itemTotal": 160
+      }
+    ],
+    "subtotal": 160,
+    "deliveryFee": 30,
+    "packagingFee": 15,
+    "tax": 8,
+    "grandTotal": 213,
+    "specialInstructions": "Make it extra crispy with podi",
+    "channel": "whatsapp",
+    "status": "Awaiting WhatsApp Confirmation",
+    "createdAt": "2026-10-23T15:15:45.618Z"
+  }
+]

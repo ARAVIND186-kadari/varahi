@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Varahi Tiffins Management Portal</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+</head>
+<body>
+
+  <!-- ==========================================
+       1. SECURE ADMIN LOGIN SCREEN
+  ========================================== -->
+  <div class="admin-login-wrapper" id="adminLoginView">
+    <div class="login-card">
+      <div class="login-brand-icon">🍛</div>
+      <h2>Varahi Tiffins</h2>
+      <p>Authorized Restaurant Management &amp; Moderation</p>
+
+      <form id="adminLoginForm">
+        <div class="admin-input-group" style="text-align: left;">
+          <label for="adminPassword">Master Password</label>
+          <input type="password" id="adminPassword" placeholder="Enter admin password (default: admin123)" required autofocus>
+        </div>
+
+        <div id="loginError" style="display: none; color: #DC2626; font-size: 0.85rem; margin-bottom: 16px; background: #FEE2E2; padding: 8px 12px; border-radius: 6px;"></div>
+
+        <button type="submit" class="btn-admin-submit" style="width: 100%;">
+          Secure Sign In &rarr;
+        </button>
+      </form>
+
+      <div style="margin-top: 24px; font-size: 0.8rem; color: #94A3B8;">
+        Protected Portal &bull; Role-based Permissions Enforced
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       2. ADMIN DASHBOARD WORKSPACE
+  ========================================== -->
+  <div class="admin-layout" id="adminDashboardView" style="display: none;">
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">VT</div>
+        <div class="sidebar-brand">
+          <h3>Varahi Tiffins</h3>
+          <span>Admin Workspace</span>
+        </div>
+      </div>
+
+      <ul class="sidebar-nav">
+        <li class="nav-item">
+          <button class="js-admin-tab-btn active" data-tab="overview">
+            <span>📊</span> Overview &amp; Stats
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="js-admin-tab-btn" data-tab="orders">
+            <span>📦</span> Order Management
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="js-admin-tab-btn" data-tab="menu">
+            <span>🍳</span> Menu &amp; Inventory
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="js-admin-tab-btn" data-tab="feedback">
+            <span>⭐</span> Feedback &amp; Reviews
+            <span class="nav-badge" id="badgePendingFeedback" style="display: none;">0</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="js-admin-tab-btn" data-tab="settings">
+            <span>⚙️</span> Restaurant Settings
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="js-admin-tab-btn" data-tab="whatsapp">
+            <span>💬</span> WhatsApp Ordering
+          </button>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <button class="btn-sidebar-logout" id="btnAdminLogout">
+          🚪 Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <main class="admin-main">
+      <!-- Top Navigation Bar -->
+      <header class="admin-topbar">
+        <div class="topbar-title">
+          <h2>Varahi Tiffins Control Center</h2>
+          <p>Kothapet, Hyderabad &bull; South Indian Vegetarian Restaurant</p>
+        </div>
+        <div class="topbar-right">
+          <a href="index.html" target="_blank" class="btn-view-site">
+            <span>🌐</span> View Live Website
+          </a>
+        </div>
+      </header>
+
+      <!-- Content Views -->
+      <div class="admin-content">
+
+        <!-- ==========================================
+             TAB 1: OVERVIEW & STATS
+        ========================================== -->
+        <div class="admin-tab-content" id="tab-overview">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon amber">📦</div>
+              <div class="stat-info">
+                <div class="label">Total Orders Recorded</div>
+                <div class="value" id="statTotalOrders">0</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon green">💬</div>
+              <div class="stat-info">
+                <div class="label">WhatsApp Orders</div>
+                <div class="value" id="statWhatsAppOrders">0</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon purple">⭐</div>
+              <div class="stat-info">
+                <div class="label">Approved Customer Rating</div>
+                <div class="value" id="statAvgRating">0.0 ★</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon blue">⏳</div>
+              <div class="stat-info">
+                <div class="label">Pending Reviews Moderation</div>
+                <div class="value" id="statPendingReviews">0</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon amber" style="background: #FEE2E2; color: #DC2626;">⚠️</div>
+              <div class="stat-info">
+                <div class="label">Low / Out-of-Stock Items</div>
+                <div class="value" id="statOutOfStock">0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Notice -->
+          <div class="admin-card" style="background: #FFFBEB; border-color: #FDE68A;">
+            <h4 style="color: #92400E; margin-bottom: 6px;">📢 Owner Pre-Launch Reminder</h4>
+            <p style="font-size: 0.9rem; color: #B45309;">
+              The phone number (<strong>+91 94945 00646</strong>), WhatsApp number (<strong>919494500646</strong>), and kitchen timings (<strong>7:00 AM–12:00 PM and 6:00 PM–10:00 PM daily</strong>) are configured and live. You can update any of these details in the <strong>Restaurant Settings</strong> tab without modifying code.
+            </p>
+          </div>
+
+          <!-- Recent Orders Summary -->
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <h3 class="card-title">Recent Customer Orders</h3>
+              <button class="btn-action respond" onclick="Admin.switchTab('orders')">View All Orders &rarr;</button>
+            </div>
+            <div class="admin-table-wrapper">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Order Ref</th>
+                    <th>Customer</th>
+                    <th>Amount</th>
+                    <th>Channel</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="overviewRecentOrders">
+                  <!-- Filled by admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 2: ORDER MANAGEMENT
+        ========================================== -->
+        <div class="admin-tab-content" id="tab-orders" style="display: none;">
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title">Customer Order Management</h3>
+                <p style="font-size: 0.85rem; color: #64748B;">
+                  Tracks orders submitted directly from website and orders initiated through WhatsApp click-to-chat.
+                </p>
+              </div>
+              <button class="btn-action respond" onclick="Admin.loadOrders()">🔄 Refresh Orders</button>
+            </div>
+
+            <div class="admin-table-wrapper">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Order &amp; Time</th>
+                    <th>Customer &amp; Contact</th>
+                    <th>Items Ordered</th>
+                    <th>Type &amp; Address</th>
+                    <th>Total</th>
+                    <th>Order Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminOrdersTableBody">
+                  <!-- Filled by admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 3: MENU & INVENTORY
+        ========================================== -->
+        <div class="admin-tab-content" id="tab-menu" style="display: none;">
+          <!-- Add New Dish Card -->
+          <div class="admin-card">
+            <h3 class="card-title" style="margin-bottom: 16px;">Add New Tiffin / Dish</h3>
+            <form id="addDishForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+              <div class="admin-input-group">
+                <label>Dish Name *</label>
+                <input type="text" id="newDishName" placeholder="e.g. MLA Pesarattu" required>
+              </div>
+              <div class="admin-input-group">
+                <label>Category *</label>
+                <select id="newDishCategory" required>
+                  <option value="Dosas">Dosas</option>
+                  <option value="Idli & Vada">Idli &amp; Vada</option>
+                  <option value="Breakfast Combos">Breakfast Combos</option>
+                  <option value="Snacks & Upma">Snacks &amp; Upma</option>
+                  <option value="Beverages">Beverages</option>
+                  <option value="Sweets & Extras">Sweets &amp; Extras</option>
+                </select>
+              </div>
+              <div class="admin-input-group">
+                <label>Price (₹) *</label>
+                <input type="number" id="newDishPrice" placeholder="70" required min="1">
+              </div>
+              <div class="admin-input-group">
+                <label>Stock Quantity *</label>
+                <input type="number" id="newDishStock" value="50" min="0">
+              </div>
+              <div class="admin-input-group" style="grid-column: 1 / -1;">
+                <label>Description</label>
+                <input type="text" id="newDishDesc" placeholder="e.g. Crisp green moong dosa with ginger chutney">
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" id="newDishSpecial">
+                <label for="newDishSpecial" style="font-size: 0.88rem; font-weight: 700;">Chef's Special Badge</label>
+              </div>
+              <div style="display: flex; align-items: flex-end;">
+                <button type="submit" class="btn-admin-submit" style="padding: 10px 20px;">+ Add Dish</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Existing Menu & Inventory Table -->
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title">Live Menu &amp; Inventory Management</h3>
+                <p style="font-size: 0.85rem; color: #64748B;">
+                  Edit prices directly in the table, adjust real-time stock counters, or toggle availability.
+                </p>
+              </div>
+              <button class="btn-action respond" onclick="Admin.loadMenu()">🔄 Refresh Menu</button>
+            </div>
+
+            <div class="admin-table-wrapper">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Dish &amp; Category</th>
+                    <th>Price (₹)</th>
+                    <th>Stock Units</th>
+                    <th>Availability Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="adminMenuTableBody">
+                  <!-- Filled by admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 4: FEEDBACK & REVIEWS MODERATION
+        ========================================== -->
+        <div class="admin-tab-content" id="tab-feedback" style="display: none;">
+          <!-- Feedback Analytics Overview -->
+          <div class="admin-card" id="feedbackAnalyticsBox">
+            <!-- Rendered by admin.js -->
+          </div>
+
+          <div class="admin-card">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title">Customer Feedback Moderation</h3>
+                <p style="font-size: 0.85rem; color: #64748B;">
+                  Only approved reviews appear publicly. You can approve, reject, or publish an official response. (Customer reviews cannot be altered).
+                </p>
+              </div>
+
+              <!-- Filter Controls & CSV Export -->
+              <div class="filters-bar">
+                <select id="feedbackStatusFilter" onchange="Admin.filterFeedback()" style="padding: 6px 10px; border-radius: 6px; border: 1px solid #CBD5E1;">
+                  <option value="all">All Moderation Statuses</option>
+                  <option value="pending">Pending Moderation Only</option>
+                  <option value="approved">Approved Only</option>
+                  <option value="rejected">Rejected Only</option>
+                </select>
+
+                <select id="feedbackRatingFilter" onchange="Admin.filterFeedback()" style="padding: 6px 10px; border-radius: 6px; border: 1px solid #CBD5E1;">
+                  <option value="all">All Ratings (1-5)</option>
+                  <option value="5">5 Stars</option>
+                  <option value="4">4 Stars</option>
+                  <option value="3">3 Stars</option>
+                  <option value="2">2 Stars</option>
+                  <option value="1">1 Star</option>
+                </select>
+
+                <select id="feedbackCategoryFilter" onchange="Admin.filterFeedback()" style="padding: 6px 10px; border-radius: 6px; border: 1px solid #CBD5E1;">
+                  <option value="all">All Categories</option>
+                  <option value="Food Quality and Taste">Food Quality and Taste</option>
+                  <option value="Food Freshness">Food Freshness</option>
+                  <option value="Service">Service</option>
+                  <option value="Staff Behavior">Staff Behavior</option>
+                  <option value="Cleanliness">Cleanliness</option>
+                  <option value="Order Accuracy">Order Accuracy</option>
+                  <option value="Preparation Time">Preparation Time</option>
+                  <option value="Packaging and Delivery">Packaging and Delivery</option>
+                  <option value="Overall Experience">Overall Experience</option>
+                  <option value="Other Suggestions">Other Suggestions</option>
+                </select>
+
+                <button class="btn-action respond" id="btnExportFeedback">
+                  📥 Export CSV
+                </button>
+              </div>
+            </div>
+
+            <div class="admin-table-wrapper">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Customer &amp; Ref</th>
+                    <th>Rating &amp; Category</th>
+                    <th>Submitted Review</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Moderation</th>
+                  </tr>
+                </thead>
+                <tbody id="adminFeedbackTableBody">
+                  <!-- Filled by admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 5: RESTAURANT SETTINGS & CONTACT
+        ========================================== -->
+        <div class="admin-tab-content" id="tab-settings" style="display: none;">
+          <div class="admin-card">
+            <h3 class="card-title" style="margin-bottom: 6px;">Restaurant Information &amp; Contact Settings</h3>
+            <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 24px;">
+              Update contact numbers, address, map links, and opening hours. Changes take effect on the live website immediately without editing source code.
+            </p>
+
+            <form id="restaurantSettingsForm">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                <div class="admin-input-group">
+                  <label>Restaurant Name</label>
+                  <input type="text" id="setRestaurantName" required>
+                </div>
+
+                <div class="admin-input-group">
+                  <label>Restaurant Category</label>
+                  <input type="text" id="setCategory" required>
+                </div>
+
+                <div class="admin-input-group">
+                  <label>Business Contact Number (Direct Calling)</label>
+                  <input type="text" id="setPhone" placeholder="+91 94945 00646" required>
+                  <small style="color: #64748B;">Used by all "Call to Order" buttons.</small>
+                </div>
+
+                <div class="admin-input-group">
+                  <label>WhatsApp Business Number (digits only)</label>
+                  <input type="text" id="setWhatsApp" placeholder="919494500646" required>
+                  <small style="color: #64748B;">Target number for WhatsApp prefilled orders.</small>
+                </div>
+
+                <div class="admin-input-group" style="grid-column: 1 / -1;">
+                  <label>Restaurant Physical Address</label>
+                  <textarea id="setAddress" rows="2" required></textarea>
+                </div>
+
+                <div class="admin-input-group" style="grid-column: 1 / -1;">
+                  <label>Google Maps Destination Link</label>
+                  <input type="url" id="setGoogleMapsUrl" required>
+                  <small style="color: #64748B;">Used by all "Get Directions" buttons.</small>
+                </div>
+
+                <div class="admin-input-group" style="grid-column: 1 / -1;">
+                  <label>Listed Kitchen / Opening Hours</label>
+                  <input type="text" id="setOpeningHours" placeholder="7:00 AM–12:00 PM and 6:00 PM–10:00 PM daily" required>
+                </div>
+
+                <div class="admin-input-group" style="grid-column: 1 / -1;">
+                  <label>Owner Confirmation Notice Banner</label>
+                  <input type="text" id="setStatusNote">
+                </div>
+
+                <div class="admin-input-group">
+                  <label>Delivery Fee (₹)</label>
+                  <input type="number" id="setDeliveryFee" value="30" min="0">
+                </div>
+
+                <div class="admin-input-group">
+                  <label>Packaging Fee (₹)</label>
+                  <input type="number" id="setPackagingFee" value="15" min="0">
+                </div>
+
+                <div class="admin-input-group">
+                  <label>GST Tax (%)</label>
+                  <input type="number" id="setTaxPercentage" value="5" min="0">
+                </div>
+              </div>
+
+              <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--admin-border); display: flex; justify-content: flex-end;">
+                <button type="submit" class="btn-admin-submit">
+                  💾 Save &amp; Publish Settings
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 6: WHATSAPP ORDERING SETTINGS
+        ========================================== -->
+        <div class="admin-tab-content" id="tab-whatsapp" style="display: none;">
+          <div class="admin-card">
+            <h3 class="card-title" style="margin-bottom: 6px;">WhatsApp Ordering &amp; Cloud API Integration</h3>
+            <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 20px;">
+              Varahi Tiffins uses frictionless WhatsApp Click-to-Chat deep links with prefilled order summaries. You can also configure Meta Cloud API for automated notifications.
+            </p>
+
+            <div style="background: #FAF8F5; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+              <h4 style="font-weight: 700; color: #1E293B; margin-bottom: 8px;">Active Click-to-Chat Status:</h4>
+              <p style="font-size: 0.9rem; color: #475569; line-height: 1.5; margin-bottom: 12px;">
+                ● Target Phone: <strong>919494500646</strong><br>
+                ● Mode: Structured prefilled order message (Customer review &amp; send)<br>
+                ● Database Tracking: Orders are assigned references (e.g. <code>#VT-2026-XXXX</code>) and recorded with status <em>Awaiting WhatsApp Confirmation</em>.
+              </p>
+              <button class="btn-action respond" id="btnTestWhatsApp">
+                🧪 Test WhatsApp Message Link
+              </button>
+            </div>
+
+            <div style="background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 12px; padding: 20px;">
+              <h4 style="font-weight: 700; color: #64748B; margin-bottom: 8px;">Optional Meta WhatsApp Business Cloud API</h4>
+              <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 16px;">
+                Enable automated outbound template notifications only when authorized credentials from Meta Developer Portal are available.
+              </p>
+              <div class="admin-input-group">
+                <label>Meta Phone Number ID</label>
+                <input type="text" placeholder="e.g. 1098492819827" disabled>
+              </div>
+              <div class="admin-input-group">
+                <label>Permanent System User Access Token</label>
+                <input type="password" placeholder="EAABw..." disabled>
+              </div>
+              <small style="color: #64748B;">
+                *Standard click-to-chat does not require Meta API tokens and works seamlessly on all customer devices.
+              </small>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

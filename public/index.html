@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Varahi Tiffins | Authentic South Indian Vegetarian Restaurant in Kothapet, Hyderabad</title>
+  <meta name="description" content="Savor authentic South Indian vegetarian tiffins at Varahi Tiffins, Kothapet, Hyderabad. Crisp Ghee Karam Dosa, soft steaming Idlis, Medu Vada, and Degree Filter Coffee. Call to Order or Order on WhatsApp.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍛</text></svg>">
+</head>
+<body>
+
+  <!-- 1. Top Owner Confirmation Notice -->
+  <div class="owner-notice-bar" id="ownerNoticeBar">
+    <span class="icon">⚠️</span>
+    <span id="ownerNoticeText">
+      Phone number (+91 94945 00646) and opening hours require owner confirmation before production launch.
+    </span>
+  </div>
+
+  <!-- 2. Header & Sticky Navbar -->
+  <header class="header">
+    <div class="container">
+      <div class="header-inner">
+        <!-- Brand -->
+        <a href="#hero" class="brand">
+          <div class="brand-logo-badge">🍛</div>
+          <div class="brand-text">
+            <h1 class="js-restaurant-name">Varahi Tiffins</h1>
+            <div class="brand-tag">
+              <span>🌱 100% Pure Veg</span> &bull; <span class="js-restaurant-category">South Indian Vegetarian</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav>
+          <ul class="nav-links">
+            <li><a href="#hero" class="active">Home</a></li>
+            <li><a href="#menu">Food Menu</a></li>
+            <li><a href="#reviews">Customer Reviews</a></li>
+            <li><a href="#contact">Contact & Location</a></li>
+          </ul>
+        </nav>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <!-- Call to Order Button (Header) -->
+          <a href="tel:+919494500646" class="btn-call-header js-call-btn" id="headerCallBtn">
+            <span>📞</span>
+            <span>Call to Order: <span class="js-phone-text">+91 94945 00646</span></span>
+          </a>
+
+          <!-- Cart Drawer Button -->
+          <button class="btn-cart-header js-open-cart" id="headerCartBtn" aria-label="Open Cart">
+            <span>🛒 Cart</span>
+            <span class="cart-count-badge js-cart-count" style="display: none;">0</span>
+          </button>
+
+          <!-- Admin Portal Link -->
+          <a href="admin.html" class="btn-admin-link" title="Authorized Admin Dashboard">
+            <span>⚙️</span> Admin
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. Hero Section -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span>✨</span> Traditional Andhra & South Indian Flavors
+          </div>
+          <h2 class="hero-title">
+            Crisp Dosas, Steaming Idlis &amp; <span class="highlight">Pure Desi Ghee</span> Magic
+          </h2>
+          <p class="hero-description">
+            Welcome to <strong>Varahi Tiffins</strong> — Kothapet's beloved South Indian vegetarian destination. Handcrafted with traditional fermented batters, freshly roasted spice podis, aromatic drumstick sambar, and authentic degree filter coffee.
+          </p>
+
+          <div class="hero-meta-strip">
+            <div class="hero-meta-item">
+              <span>📍</span> <span class="js-address-text">Kothapet, Hyderabad</span>
+            </div>
+            <div class="hero-meta-item">
+              <span>⏰</span> <span class="js-opening-hours">7:00 AM–12:00 PM &amp; 6:00 PM–10:00 PM</span>
+            </div>
+          </div>
+
+          <!-- Hero Action Buttons -->
+          <div class="hero-cta-group">
+            <!-- 1. Call to Order -->
+            <a href="tel:+919494500646" class="btn-cta btn-call-hero js-call-btn" id="heroCallBtn">
+              <span>📞</span>
+              <span>Call to Order: <strong class="js-phone-text">+91 94945 00646</strong></span>
+            </a>
+
+            <!-- 2. Order on WhatsApp -->
+            <button class="btn-cta btn-whatsapp-hero js-open-cart" id="heroWhatsAppBtn">
+              <span>💬</span>
+              <span>Order on WhatsApp</span>
+            </button>
+
+            <!-- 3. Get Directions -->
+            <a href="https://maps.app.goo.gl/NxjV16Pa4WxCKj158?g_st=ac" class="btn-cta btn-directions-hero js-directions-link" id="heroDirectionsBtn">
+              <span>📍</span>
+              <span>Get Directions</span>
+            </a>
+          </div>
+
+          <div class="hero-confirmation-disclaimer">
+            <span>ℹ️</span> Tapping call opens your phone dialer. Orders are accepted verbally or upon confirmation.
+          </div>
+        </div>
+
+        <!-- Hero Image Presentation -->
+        <div class="hero-image-wrapper">
+          <div class="hero-image-card">
+            <img src="assets/images/hero.jpg" alt="Authentic South Indian Tiffins spread at Varahi Tiffins" width="600" height="400">
+            <div class="hero-floating-badge">
+              <div class="floating-badge-icon">☕</div>
+              <div class="floating-badge-text">
+                <div class="title">Degree Filter Kaapi &amp; Karam Dosa</div>
+                <div class="subtitle">Brewed &amp; Roasted Fresh Every Morning</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Food Menu Section -->
+  <section class="section" id="menu">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Freshly Prepared Daily</div>
+        <h2 class="section-title">Our Authentic Tiffins Menu</h2>
+        <p class="section-subtitle">
+          Pure vegetarian culinary delights made with organic ghee, heirloom recipes, and 3 signature fresh chutneys.
+        </p>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="category-filter-bar">
+        <button class="btn-filter js-category-filter active" data-category="all">🍽️ All Tiffins</button>
+        <button class="btn-filter js-category-filter" data-category="Dosas">🥞 Crispy Dosas</button>
+        <button class="btn-filter js-category-filter" data-category="Idli & Vada">⚪ Idli &amp; Vada</button>
+        <button class="btn-filter js-category-filter" data-category="Breakfast Combos">🍛 Combos &amp; Poori</button>
+        <button class="btn-filter js-category-filter" data-category="Snacks & Upma">🥣 Pongal &amp; Upma</button>
+        <button class="btn-filter js-category-filter" data-category="Beverages">☕ Kaapi &amp; Beverages</button>
+        <button class="btn-filter js-category-filter" data-category="Sweets & Extras">🍯 Sweets &amp; Extras</button>
+      </div>
+
+      <!-- Food Menu Grid -->
+      <div class="menu-grid" id="menuGrid">
+        <!-- Rendered dynamically by app.js -->
+        <div style="text-align: center; grid-column: 1 / -1; padding: 40px;">
+          Loading delicious tiffins...
+        </div>
+      </div>
+
+      <!-- Call to Order Banner within Food Menu -->
+      <div class="menu-call-banner">
+        <div class="menu-call-info">
+          <h4>Prefer Ordering Directly by Phone?</h4>
+          <p>Skip the cart! Speak directly to our counter team for quick pickup or immediate dine-in booking.</p>
+        </div>
+        <a href="tel:+919494500646" class="btn-cta btn-call-hero js-call-btn" style="white-space: nowrap;">
+          <span>📞</span> Call: <span class="js-phone-text">+91 94945 00646</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Customer Feedback & Reviews Section -->
+  <section class="section reviews-section" id="reviews">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Real Customer Voice</div>
+        <h2 class="section-title">Customer Feedback &amp; Reviews</h2>
+        <p class="section-subtitle">
+          Ratings are calculated exclusively from verified, approved customer submissions in our live database.
+        </p>
+      </div>
+
+      <!-- Scorecard Summary Card -->
+      <div class="reviews-summary-card">
+        <!-- Main Score -->
+        <div class="score-main">
+          <div class="score-big" id="publicAvgScore">0.0</div>
+          <div class="score-stars" id="publicScoreStars">☆☆☆☆☆</div>
+          <div class="score-total" id="publicTotalReviews">Based on 0 approved reviews</div>
+        </div>
+
+        <!-- Rating Distribution Bars -->
+        <div class="rating-distribution-list" id="publicRatingDistribution">
+          <!-- Filled dynamically from database -->
+          <div style="font-size: 0.85rem; color: var(--text-muted); text-align: center;">Loading verified statistics...</div>
+        </div>
+
+        <!-- Feedback CTA -->
+        <div class="feedback-cta-box">
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 6px;">
+            Had a meal with us recently? We would love to hear your thoughts!
+          </p>
+          <button class="btn-open-feedback js-open-feedback" id="btnOpenFeedbackModal">
+            <span>✍️</span> Rate Your Experience
+          </button>
+        </div>
+      </div>
+
+      <!-- Approved Reviews Grid -->
+      <div class="reviews-grid" id="publicReviewsList">
+        <!-- Rendered dynamically from /api/feedback/public -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Contact Us & Restaurant Location Section -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Visit or Connect</div>
+        <h2 class="section-title">Find Varahi Tiffins</h2>
+        <p class="section-subtitle">
+          Conveniently located in Kothapet, Hyderabad. Drop by for hot breakfast or reach out via phone &amp; WhatsApp.
+        </p>
+      </div>
+
+      <div class="contact-grid">
+        <!-- Contact Card -->
+        <div class="contact-card">
+          <!-- Address -->
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div class="contact-info">
+              <h4>Restaurant Address</h4>
+              <p class="js-address-text">
+                Plot No. 265, Vasavi Colony Road, beside TNR Apartment, Kothapet, Hyderabad, Telangana 500102, India.
+              </p>
+            </div>
+          </div>
+
+          <!-- Contact Phone -->
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <div class="contact-info">
+              <h4>Direct Telephone</h4>
+              <p>
+                <a href="tel:+919494500646" class="js-call-btn" style="color: var(--phone); font-weight: 700;">
+                  <span class="js-phone-text">+91 94945 00646</span>
+                </a>
+                <br>
+                <small style="color: var(--text-muted);">Available during listed kitchen hours</small>
+              </p>
+            </div>
+          </div>
+
+          <!-- WhatsApp -->
+          <div class="contact-item">
+            <div class="contact-icon" style="background: var(--whatsapp-light); color: var(--whatsapp);">💬</div>
+            <div class="contact-info">
+              <h4>WhatsApp Ordering</h4>
+              <p>
+                <a href="https://wa.me/919494500646" target="_blank" class="js-whatsapp-link" style="color: #15803D; font-weight: 700;">
+                  +<span class="js-whatsapp-text">919494500646</span>
+                </a>
+                <br>
+                <small style="color: var(--text-muted);">Instant order messages and inquiries</small>
+              </p>
+            </div>
+          </div>
+
+          <!-- Opening Hours -->
+          <div class="contact-item">
+            <div class="contact-icon">⏰</div>
+            <div class="contact-info">
+              <h4>Listed Opening Hours</h4>
+              <p class="js-opening-hours" style="font-weight: 600; color: var(--text-main);">
+                7:00 AM–12:00 PM and 6:00 PM–10:00 PM daily.
+              </p>
+              <small style="color: #92400E; background: #FEF3C7; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px;">
+                ⚠️ Hours &amp; phone subject to final owner confirmation
+              </small>
+            </div>
+          </div>
+
+          <!-- Action Buttons in Contact Card -->
+          <div class="contact-action-buttons">
+            <a href="https://maps.app.goo.gl/NxjV16Pa4WxCKj158?g_st=ac" class="btn-contact-action btn-directions-hero js-directions-link">
+              <span>📍</span> Get Directions
+            </a>
+            <a href="tel:+919494500646" class="btn-contact-action btn-call-hero js-call-btn">
+              <span>📞</span> Call to Order
+            </a>
+          </div>
+        </div>
+
+        <!-- Embedded Interactive Google Map -->
+        <div class="map-container">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3807.8288820468087!2d78.53931677516458!3d17.37198758351222!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb98e7276701bb%3A0x6b637956a237eb64!2sVasavi%20Colony%20Rd%2C%20Kothapet%2C%20Hyderabad%2C%20Telangana%20500035!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade" 
+            title="Varahi Tiffins Location Map">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3 class="js-restaurant-name">Varahi Tiffins</h3>
+          <p>
+            Pure South Indian Vegetarian Restaurant in Kothapet, Hyderabad. Delivering crisp dosas, soft idlis, and traditional degree filter kaapi.
+          </p>
+          <div style="display: flex; gap: 10px; margin-top: 14px;">
+            <a href="tel:+919494500646" class="btn-call-header js-call-btn" style="display: inline-flex; font-size: 0.8rem; padding: 6px 14px;">
+              📞 Call: <span class="js-phone-text">+91 94945 00646</span>
+            </a>
+            <a href="https://maps.app.goo.gl/NxjV16Pa4WxCKj158?g_st=ac" class="btn-admin-link js-directions-link" style="color: #fff; border-color: #44403C;">
+              📍 Get Directions
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#menu">Food Menu &amp; Prices</a></li>
+            <li><a href="#reviews">Customer Feedback</a></li>
+            <li><a href="#contact">Contact &amp; Location</a></li>
+            <li><a href="admin.html">Admin Portal</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Kitchen Timings</h4>
+          <div class="footer-hours-box">
+            <div style="color: #F59E0B; font-weight: 700; margin-bottom: 4px;">Morning Session:</div>
+            <div>7:00 AM – 12:00 PM (Daily)</div>
+            <div style="color: #F59E0B; font-weight: 700; margin-top: 8px; margin-bottom: 4px;">Evening Session:</div>
+            <div>6:00 PM – 10:00 PM (Daily)</div>
+            <div style="font-size: 0.75rem; color: #A8A29E; margin-top: 8px;">
+              *Subject to owner confirmation before launch.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 Varahi Tiffins. All rights reserved. South Indian Vegetarian Restaurant.</div>
+        <div>Plot No. 265, Vasavi Colony Road, Kothapet, Hyderabad, Telangana 500102</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 8. Sticky Mobile Bottom Action Bar -->
+  <div class="mobile-action-bar">
+    <a href="tel:+919494500646" class="mobile-bar-btn call js-call-btn">
+      <span class="icon">📞</span>
+      <span>Call</span>
+    </a>
+    <a href="https://wa.me/919494500646" class="mobile-bar-btn whatsapp js-whatsapp-link">
+      <span class="icon">💬</span>
+      <span>WhatsApp</span>
+    </a>
+    <a href="https://maps.app.goo.gl/NxjV16Pa4WxCKj158?g_st=ac" class="mobile-bar-btn directions js-directions-link">
+      <span class="icon">📍</span>
+      <span>Directions</span>
+    </a>
+    <button class="mobile-bar-btn cart js-open-cart">
+      <span class="icon">🛒</span>
+      <span>Cart</span>
+      <span class="mobile-cart-badge js-cart-count" style="display: none;">0</span>
+    </button>
+  </div>
+
+  <!-- 9. Interactive Cart & WhatsApp Checkout Drawer -->
+  <div class="drawer-overlay" id="cartDrawerOverlay">
+    <div class="cart-drawer">
+      <div class="cart-header">
+        <h3><span>🛒</span> Your Order Summary</h3>
+        <button class="btn-close-drawer js-close-cart" aria-label="Close Cart">&times;</button>
+      </div>
+
+      <div class="cart-body">
+        <!-- Cart Items List -->
+        <div class="cart-items-list" id="cartItemsList">
+          <!-- Filled dynamically by cart.js -->
+        </div>
+
+        <!-- Customer & Delivery Options -->
+        <div class="cart-form-section">
+          <div class="order-type-tabs">
+            <button class="order-type-btn active" data-type="pickup">🛍️ Takeaway / Pickup</button>
+            <button class="order-type-btn" data-type="delivery">🛵 Home Delivery</button>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Your Name *</label>
+            <input type="text" class="form-control" id="orderCustomerName" placeholder="e.g. Ramesh Kumar" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Your Phone Number</label>
+            <input type="tel" class="form-control" id="orderCustomerPhone" placeholder="e.g. 9876543210">
+          </div>
+
+          <div class="form-group" id="deliveryAddressGroup" style="display: none;">
+            <label class="form-label">Delivery Address in Kothapet / Hyderabad *</label>
+            <textarea class="form-control" id="orderDeliveryAddress" rows="2" placeholder="House/Flat no, Landmark, Colony, Kothapet"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Special Cooking Instructions (Optional)</label>
+            <input type="text" class="form-control" id="orderSpecialInstructions" placeholder="e.g. Extra spicy karam, less oil, separate chutney">
+          </div>
+        </div>
+
+        <!-- Price Breakdown -->
+        <div class="cart-summary-box">
+          <div class="summary-line">
+            <span>Items Subtotal:</span>
+            <span id="cartSubtotal">₹0</span>
+          </div>
+          <div class="summary-line">
+            <span>Delivery Fee:</span>
+            <span id="cartDeliveryFee">FREE</span>
+          </div>
+          <div class="summary-line">
+            <span>Eco Packaging:</span>
+            <span id="cartPackagingFee">₹15</span>
+          </div>
+          <div class="summary-line">
+            <span>GST (5%):</span>
+            <span id="cartTax">₹0</span>
+          </div>
+          <div class="summary-line total">
+            <span>Grand Total:</span>
+            <span id="cartGrandTotal">₹0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cart-footer">
+        <!-- 1. Order on WhatsApp Button -->
+        <button class="btn-whatsapp-order" id="btnOrderWhatsApp">
+          <span>💬 Order on WhatsApp</span>
+        </button>
+
+        <!-- 2. Call to Order Button -->
+        <button class="btn-call-order-cart" id="btnCallFromCart">
+          <span>📞 Call to Order:</span> <span class="js-phone-text">+91 94945 00646</span>
+        </button>
+
+        <div class="whatsapp-clarification-note">
+          🔒 Tapping WhatsApp prepares a structured order message addressed to Varahi Tiffins. You must review and press 'Send' in WhatsApp. Opening WhatsApp is not proof of payment or acceptance.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. Rate Your Experience / Feedback Modal -->
+  <div class="modal-overlay" id="feedbackModalOverlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Share Your Dining Experience</h3>
+        <button class="btn-close-drawer js-close-feedback">&times;</button>
+      </div>
+
+      <form id="customerFeedbackForm">
+        <div class="modal-body">
+          <!-- Star Rating Picker -->
+          <div class="form-group" style="text-align: center;">
+            <label class="form-label" style="font-size: 0.95rem;">Overall Rating *</label>
+            <div class="star-rating-selector" id="starRatingSelector">
+              <span data-val="1">★</span>
+              <span data-val="2">★</span>
+              <span data-val="3">★</span>
+              <span data-val="4">★</span>
+              <span data-val="5" class="selected">★</span>
+            </div>
+            <div id="starRatingLabel" style="font-size: 0.88rem; font-weight: 700; color: #D97706;">
+              5 Stars - Outstanding &amp; Authentic!
+            </div>
+            <input type="hidden" id="feedbackRatingInput" value="5">
+          </div>
+
+          <!-- Customer Name -->
+          <div class="form-group">
+            <label class="form-label">Your Name or Display Name *</label>
+            <input type="text" class="form-control" id="feedbackName" placeholder="e.g. Ananya Reddy" required minlength="2" maxlength="60">
+            <div class="form-help">This name will be displayed publicly if approved.</div>
+          </div>
+
+          <!-- Email (Optional) -->
+          <div class="form-group">
+            <label class="form-label">Email Address (Optional)</label>
+            <input type="email" class="form-control" id="feedbackEmail" placeholder="e.g. ananya@example.com">
+            <div class="form-help">🔒 Strictly confidential. Never published or shared.</div>
+          </div>
+
+          <!-- Feedback Category -->
+          <div class="form-group">
+            <label class="form-label">Feedback Category *</label>
+            <select class="form-control" id="feedbackCategory" required>
+              <option value="">-- Please select a category --</option>
+              <option value="Food Quality and Taste" selected>Food Quality and Taste</option>
+              <option value="Food Freshness">Food Freshness</option>
+              <option value="Service">Service</option>
+              <option value="Staff Behavior">Staff Behavior</option>
+              <option value="Cleanliness">Cleanliness</option>
+              <option value="Order Accuracy">Order Accuracy</option>
+              <option value="Preparation Time">Preparation Time</option>
+              <option value="Packaging and Delivery">Packaging and Delivery</option>
+              <option value="Overall Experience">Overall Experience</option>
+              <option value="Other Suggestions">Other Suggestions</option>
+            </select>
+          </div>
+
+          <!-- Written Review -->
+          <div class="form-group">
+            <label class="form-label">Written Review * (Min 10 characters)</label>
+            <textarea class="form-control" id="feedbackText" rows="3" placeholder="Share your honest experience about the food, taste, sambar, or ambiance..." required minlength="10" maxlength="1000"></textarea>
+          </div>
+
+          <!-- Suggestions for improvement (Optional) -->
+          <div class="form-group">
+            <label class="form-label">Suggestions for Improvement (Optional)</label>
+            <textarea class="form-control" id="feedbackSuggestions" rows="2" placeholder="Any specific suggestions for our kitchen or service team?"></textarea>
+          </div>
+
+          <!-- Order Reference (Optional) -->
+          <div class="form-group">
+            <label class="form-label">Order Reference ID (Optional)</label>
+            <input type="text" class="form-control" id="feedbackOrderRef" placeholder="e.g. VT-2026-1001">
+            <div class="form-help">If provided, our system validates the order for a verified customer badge.</div>
+          </div>
+
+          <!-- Honeypot field for anti-spam bots -->
+          <div style="display: none;">
+            <input type="text" id="feedbackWebsiteUrl" tabindex="-1" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary js-close-feedback">Cancel</button>
+          <button type="submit" class="btn-primary" id="btnSubmitFeedback">Submit Feedback</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/cart.js"></script>
+  <script src="js/feedback.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

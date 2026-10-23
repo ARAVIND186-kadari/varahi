@@ -1,0 +1,17 @@
+[
+  {
+    "id": "FB-545638",
+    "customerName": "Venkatesh Rao",
+    "customerEmail": "venkat@example.com",
+    "rating": 5,
+    "category": "Food Quality and Taste",
+    "reviewText": "Best Ghee Karam Dosa in Kothapet! The chutney trio is authentic and fresh.",
+    "suggestions": "Keep up the good quality sambar!",
+    "orderRef": "VT-2026-0001",
+    "isOrderVerified": true,
+    "status": "approved",
+    "adminResponse": "Thank you Venkatesh garu! We look forward to serving you again.",
+    "createdAt": "2026-10-23T15:15:45.640Z",
+    "updatedAt": "2026-10-23T15:15:45.652Z"
+  }
+]
