@@ -23,8 +23,8 @@
     <div class="container">
       <div class="header-inner">
         <!-- Brand -->
-        <a href="#hero" class="brand">
-          <div class="brand-logo-badge">🍛</div>
+        <a href="#hero" class="brand" aria-label="Varahi Tiffins Home">
+          <div class="brand-logo-badge" aria-hidden="true">🍛</div>
           <div class="brand-text">
             <h1 class="js-restaurant-name">Varahi Tiffins</h1>
             <div class="brand-tag">
@@ -34,37 +34,73 @@
         </a>
 
         <!-- Desktop Navigation -->
-        <nav>
+        <nav class="desktop-nav" aria-label="Main Navigation">
           <ul class="nav-links">
             <li><a href="#hero" class="active">Home</a></li>
             <li><a href="#menu">Food Menu</a></li>
             <li><a href="#reviews">Customer Reviews</a></li>
-            <li><a href="#contact">Contact & Location</a></li>
+            <li><a href="#contact">Contact &amp; Location</a></li>
           </ul>
         </nav>
 
         <!-- Header Actions -->
         <div class="header-actions">
-          <!-- Call to Order Button (Header) -->
-          <a href="tel:+919494500646" class="btn-call-header js-call-btn" id="headerCallBtn">
+          <!-- Call to Order Button (Header for tablet/desktop) -->
+          <a href="tel:+919494500646" class="btn-call-header js-call-btn" id="headerCallBtn" title="Call to Order">
             <span>📞</span>
-            <span>Call to Order: <span class="js-phone-text">+91 94945 00646</span></span>
+            <span>Call: <span class="js-phone-text">+91 94945 00646</span></span>
           </a>
 
-          <!-- Cart Drawer Button -->
-          <button class="btn-cart-header js-open-cart" id="headerCartBtn" aria-label="Open Cart">
-            <span>🛒 Cart</span>
+          <!-- Cart Drawer Button (Compact, not an oversized circle) -->
+          <button class="btn-cart-header js-open-cart" id="headerCartBtn" aria-label="Open Cart" title="View Order Summary">
+            <span class="cart-icon">🛒</span>
+            <span class="cart-label">Cart</span>
             <span class="cart-count-badge js-cart-count" style="display: none;">0</span>
           </button>
 
-          <!-- Admin Portal Link -->
+          <!-- Admin Portal Link (Compact, visible across devices) -->
           <a href="admin.html" class="btn-admin-link" title="Authorized Admin Dashboard">
-            <span>⚙️</span> Admin
+            <span class="admin-icon">⚙️</span>
+            <span class="admin-label">Admin</span>
           </a>
+
+          <!-- Mobile Menu Toggle Button -->
+          <button class="btn-mobile-nav-toggle" id="btnMobileNavToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+            <span class="hamburger-icon">☰</span>
+          </button>
         </div>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer" aria-hidden="true">
+    <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+    <div class="mobile-nav-panel">
+      <div class="mobile-nav-header">
+        <div class="brand" style="pointer-events: none;">
+          <div class="brand-logo-badge" style="width: 32px; height: 32px; font-size: 1.1rem;">🍛</div>
+          <div class="brand-text">
+            <span style="font-weight: 800; font-size: 1.05rem; color: var(--text-main);">Varahi Tiffins</span>
+            <div style="font-size: 0.65rem; color: var(--accent-green); font-weight: 600;">Pure South Indian Vegetarian</div>
+          </div>
+        </div>
+        <button class="btn-close-drawer" id="btnCloseMobileNav" aria-label="Close navigation">&times;</button>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="#hero" class="mobile-nav-link active"><span>🏠</span> Home</a></li>
+        <li><a href="#menu" class="mobile-nav-link"><span>🍽️</span> Food Menu</a></li>
+        <li><a href="#reviews" class="mobile-nav-link"><span>⭐</span> Customer Reviews</a></li>
+        <li><a href="#contact" class="mobile-nav-link"><span>📍</span> Contact &amp; Location</a></li>
+        <li><a href="admin.html" class="mobile-nav-link"><span>⚙️</span> Admin Dashboard</a></li>
+      </ul>
+      <div class="mobile-nav-footer">
+        <a href="tel:+919494500646" class="btn-cta btn-call-hero js-call-btn" style="width: 100%; justify-content: center; font-size: 0.88rem; padding: 12px;">
+          <span>📞</span> Call: <span class="js-phone-text">+91 94945 00646</span>
+        </a>
+      </div>
+    </div>
+  </div>
 
   <!-- 3. Hero Section -->
   <section class="hero" id="hero">

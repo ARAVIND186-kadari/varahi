@@ -80,11 +80,35 @@ const Admin = {
       loginForm.addEventListener('submit', (e) => this.handleLogin(e));
     }
 
+    // Mobile sidebar toggle
+    const toggleBtn = document.getElementById('btnToggleSidebar');
+    const closeBtn = document.getElementById('btnCloseSidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const sidebar = document.querySelector('.admin-sidebar');
+
+    if (toggleBtn && sidebar) {
+      toggleBtn.addEventListener('click', () => this.toggleSidebar(true));
+    }
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.toggleSidebar(false));
+    }
+    if (overlay) {
+      overlay.addEventListener('click', () => this.toggleSidebar(false));
+    }
+
+    // Show/hide close button based on viewport
+    this.updateCloseBtnVisibility();
+    window.addEventListener('resize', () => this.updateCloseBtnVisibility());
+
     // Sidebar tab buttons
     document.querySelectorAll('.js-admin-tab-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const tab = e.currentTarget.dataset.tab;
         this.switchTab(tab);
+        // Close sidebar on mobile after tab selection
+        if (window.innerWidth < 768) {
+          this.toggleSidebar(false);
+        }
       });
     });
 
@@ -110,6 +134,46 @@ const Admin = {
     const exportBtn = document.getElementById('btnExportFeedback');
     if (exportBtn) {
       exportBtn.addEventListener('click', () => this.handleExportFeedback());
+    }
+
+    // Hash routing for browser Back / Forward buttons
+    window.addEventListener('hashchange', () => {
+      const hashTab = window.location.hash.replace('#', '').trim();
+      const validTabs = ['overview', 'orders', 'menu', 'feedback', 'settings', 'whatsapp'];
+      if (validTabs.includes(hashTab) && hashTab !== this.currentTab) {
+        this.switchTab(hashTab, false);
+      }
+    });
+
+    // Handle initial hash on page load
+    const initialHash = window.location.hash.replace('#', '').trim();
+    if (initialHash && ['overview', 'orders', 'menu', 'feedback', 'settings', 'whatsapp'].includes(initialHash)) {
+      this.currentTab = initialHash;
+    }
+
+  toggleSidebar(open) {
+    const sidebar = document.querySelector('.admin-sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (sidebar) {
+      if (open) {
+        sidebar.classList.add('open');
+      } else {
+        sidebar.classList.remove('open');
+      }
+    }
+    if (overlay) {
+      if (open) {
+        overlay.classList.add('active');
+      } else {
+        overlay.classList.remove('active');
+      }
+    }
+  },
+
+  updateCloseBtnVisibility() {
+    const closeBtn = document.getElementById('btnCloseSidebar');
+    if (closeBtn) {
+      closeBtn.style.display = window.innerWidth < 768 ? 'flex' : 'none';
     }
   },
 
@@ -164,10 +228,16 @@ const Admin = {
     this.switchTab(this.currentTab);
   },
 
-  switchTab(tab) {
+  switchTab(tab, updateHash = true) {
+    if (!tab) tab = 'overview';
     this.currentTab = tab;
 
-    // Update sidebar nav active
+    // Synchronize browser URL hash for full browser Back/Forward button support
+    if (updateHash && window.location.hash !== '#' + tab) {
+      window.location.hash = '#' + tab;
+    }
+
+    // Update sidebar nav active states
     document.querySelectorAll('.js-admin-tab-btn').forEach(b => {
       if (b.dataset.tab === tab) {
         b.classList.add('active');
@@ -184,6 +254,37 @@ const Admin = {
     // Show target tab view
     const targetView = document.getElementById(`tab-${tab}`);
     if (targetView) targetView.style.display = 'block';
+
+    // Update topbar breadcrumbs & title
+    const sep = document.getElementById('adminBreadcrumbSep');
+    const currentCrumb = document.getElementById('adminBreadcrumbCurrent');
+    const tabTitles = {
+      'overview': 'Dashboard / Home',
+      'orders': 'Order Management',
+      'menu': 'Menu & Inventory',
+      'feedback': 'Feedback & Reviews',
+      'settings': 'Restaurant Settings',
+      'whatsapp': 'WhatsApp Ordering'
+    };
+
+    if (sep && currentCrumb) {
+      if (tab === 'overview') {
+        sep.style.display = 'none';
+        currentCrumb.style.display = 'none';
+      } else {
+        sep.style.display = 'inline';
+        currentCrumb.style.display = 'inline';
+        currentCrumb.textContent = tabTitles[tab] || tab;
+      }
+    }
+
+    // Close mobile sidebar if open
+    if (window.innerWidth < 768) {
+      this.toggleSidebar(false);
+    }
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Load data for the tab
     if (tab === 'overview') this.loadOverview();
@@ -626,9 +727,12 @@ const Admin = {
       if (res.ok) {
         showToast(`Review status updated to ${status}!`, 'success');
         this.loadFeedback();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        showToast(data.error || 'Failed to moderate review', 'error');
       }
     } catch (e) {
-      showToast('Failed to moderate review', 'error');
+      showToast('Failed to moderate review. Please check connection.', 'error');
     }
   },
 

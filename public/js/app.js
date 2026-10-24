@@ -118,6 +118,40 @@ const App = {
       });
     });
 
+    // Mobile navigation drawer toggle
+    const mobileNavToggle = document.getElementById('btnMobileNavToggle');
+    const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+    const closeMobileNav = document.getElementById('btnCloseMobileNav');
+    const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
+
+    const openNav = () => {
+      if (mobileNavDrawer) {
+        mobileNavDrawer.classList.add('open');
+        mobileNavDrawer.setAttribute('aria-hidden', 'false');
+        if (mobileNavToggle) mobileNavToggle.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      }
+    };
+
+    const closeNav = () => {
+      if (mobileNavDrawer) {
+        mobileNavDrawer.classList.remove('open');
+        mobileNavDrawer.setAttribute('aria-hidden', 'true');
+        if (mobileNavToggle) mobileNavToggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+    };
+
+    if (mobileNavToggle) mobileNavToggle.addEventListener('click', openNav);
+    if (closeMobileNav) closeMobileNav.addEventListener('click', closeNav);
+    if (mobileNavBackdrop) mobileNavBackdrop.addEventListener('click', closeNav);
+
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        closeNav();
+      });
+    });
+
     // Smooth scroll for internal links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {

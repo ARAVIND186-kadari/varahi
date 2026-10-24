@@ -41,20 +41,25 @@
        2. ADMIN DASHBOARD WORKSPACE
   ========================================== -->
   <div class="admin-layout" id="adminDashboardView" style="display: none;">
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <!-- Sidebar Navigation -->
     <aside class="admin-sidebar">
       <div class="sidebar-header">
-        <div class="sidebar-logo">VT</div>
-        <div class="sidebar-brand">
-          <h3>Varahi Tiffins</h3>
-          <span>Admin Workspace</span>
+        <div class="sidebar-brand-wrapper js-admin-go-dashboard" onclick="Admin.switchTab('overview')" title="Return to Dashboard" role="button" tabindex="0" style="cursor: pointer; display: flex; align-items: center; gap: 12px; min-width: 0;">
+          <div class="sidebar-logo">VT</div>
+          <div class="sidebar-brand">
+            <h3>Varahi Tiffins</h3>
+            <span>Admin Workspace</span>
+          </div>
         </div>
+        <button class="btn-close-drawer" id="btnCloseSidebar" style="margin-left:auto; display:none;" aria-label="Close Menu">&times;</button>
       </div>
 
       <ul class="sidebar-nav">
         <li class="nav-item">
-          <button class="js-admin-tab-btn active" data-tab="overview">
-            <span>📊</span> Overview &amp; Stats
+          <button class="js-admin-tab-btn active" data-tab="overview" id="sidebarNavDashboard">
+            <span>🏠</span> Dashboard / Home
           </button>
         </li>
         <li class="nav-item">
@@ -96,13 +101,25 @@
     <main class="admin-main">
       <!-- Top Navigation Bar -->
       <header class="admin-topbar">
+        <button class="btn-sidebar-toggle" id="btnToggleSidebar" aria-label="Open Navigation Menu">
+          ☰
+        </button>
         <div class="topbar-title">
-          <h2>Varahi Tiffins Control Center</h2>
-          <p>Kothapet, Hyderabad &bull; South Indian Vegetarian Restaurant</p>
+          <div class="topbar-breadcrumbs">
+            <button class="btn-breadcrumb-home js-admin-go-dashboard" onclick="Admin.switchTab('overview')" title="Return to Dashboard">
+              <span>🏠</span> <span>Dashboard</span>
+            </button>
+            <span class="breadcrumb-separator" id="adminBreadcrumbSep" style="display: none;">/</span>
+            <span class="breadcrumb-current" id="adminBreadcrumbCurrent" style="display: none;">Overview</span>
+          </div>
+          <p class="topbar-subtitle">Kothapet, Hyderabad &bull; South Indian Vegetarian Restaurant</p>
         </div>
         <div class="topbar-right">
-          <a href="index.html" target="_blank" class="btn-view-site">
-            <span>🌐</span> View Live Website
+          <button class="btn-topbar-home js-admin-go-dashboard" onclick="Admin.switchTab('overview')" id="btnTopbarHome" title="Return to Dashboard">
+            <span>🏠</span> <span>Home</span>
+          </button>
+          <a href="index.html" target="_blank" class="btn-view-site" title="Open Customer Website">
+            <span>🌐</span> <span>View Website</span>
           </a>
         </div>
       </header>
@@ -201,7 +218,10 @@
                   Tracks orders submitted directly from website and orders initiated through WhatsApp click-to-chat.
                 </p>
               </div>
-              <button class="btn-action respond" onclick="Admin.loadOrders()">🔄 Refresh Orders</button>
+              <div class="card-header-actions">
+                <button class="btn-card-back js-admin-go-dashboard" onclick="Admin.switchTab('overview')" title="Back to Dashboard"><span>🏠</span> Dashboard</button>
+                <button class="btn-action respond" onclick="Admin.loadOrders()">🔄 Refresh Orders</button>
+              </div>
             </div>
 
             <div class="admin-table-wrapper">
@@ -231,7 +251,10 @@
         <div class="admin-tab-content" id="tab-menu" style="display: none;">
           <!-- Add New Dish Card -->
           <div class="admin-card">
-            <h3 class="card-title" style="margin-bottom: 16px;">Add New Tiffin / Dish</h3>
+            <div class="card-header-flex" style="margin-bottom: 16px;">
+              <h3 class="card-title" style="margin-bottom: 0;">Add New Tiffin / Dish</h3>
+              <button class="btn-card-back js-admin-go-dashboard" onclick="Admin.switchTab('overview')" title="Back to Dashboard"><span>🏠</span> Dashboard</button>
+            </div>
             <form id="addDishForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
               <div class="admin-input-group">
                 <label>Dish Name *</label>
@@ -279,7 +302,10 @@
                   Edit prices directly in the table, adjust real-time stock counters, or toggle availability.
                 </p>
               </div>
-              <button class="btn-action respond" onclick="Admin.loadMenu()">🔄 Refresh Menu</button>
+              <div class="card-header-actions">
+                <button class="btn-card-back js-admin-go-dashboard" onclick="Admin.switchTab('overview')" title="Back to Dashboard"><span>🏠</span> Dashboard</button>
+                <button class="btn-action respond" onclick="Admin.loadMenu()">🔄 Refresh Menu</button>
+              </div>
             </div>
 
             <div class="admin-table-wrapper">
@@ -318,6 +344,10 @@
                   Only approved reviews appear publicly. You can approve, reject, or publish an official response. (Customer reviews cannot be altered).
                 </p>
               </div>
+              <div class="card-header-actions">
+                <button class="btn-card-back js-admin-go-dashboard" onclick="Admin.switchTab('overview')" title="Back to Dashboard"><span>🏠</span> Dashboard</button>
+              </div>
+            </div>
 
               <!-- Filter Controls & CSV Export -->
               <div class="filters-bar">
@@ -382,10 +412,15 @@
         ========================================== -->
         <div class="admin-tab-content" id="tab-settings" style="display: none;">
           <div class="admin-card">
-            <h3 class="card-title" style="margin-bottom: 6px;">Restaurant Information &amp; Contact Settings</h3>
-            <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 24px;">
-              Update contact numbers, address, map links, and opening hours. Changes take effect on the live website immediately without editing source code.
-            </p>
+            <div class="card-header-flex" style="margin-bottom: 16px;">
+              <div>
+                <h3 class="card-title" style="margin-bottom: 4px;">Restaurant Information &amp; Contact Settings</h3>
+                <p style="font-size: 0.85rem; color: #64748B;">
+                  Update contact numbers, address, map links, and opening hours. Changes take effect on the live website immediately without editing source code.
+                </p>
+              </div>
+              <button class="btn-card-back js-admin-go-dashboard" onclick="Admin.switchTab('overview')" title="Back to Dashboard"><span>🏠</span> Dashboard</button>
+            </div>
 
             <form id="restaurantSettingsForm">
               <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
@@ -469,10 +504,15 @@
         ========================================== -->
         <div class="admin-tab-content" id="tab-whatsapp" style="display: none;">
           <div class="admin-card">
-            <h3 class="card-title" style="margin-bottom: 6px;">WhatsApp Ordering &amp; Cloud API Integration</h3>
-            <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 20px;">
-              Varahi Tiffins uses frictionless WhatsApp Click-to-Chat deep links with prefilled order summaries. You can also configure Meta Cloud API for automated notifications.
-            </p>
+            <div class="card-header-flex" style="margin-bottom: 16px;">
+              <div>
+                <h3 class="card-title" style="margin-bottom: 4px;">WhatsApp Ordering &amp; Cloud API Integration</h3>
+                <p style="font-size: 0.85rem; color: #64748B;">
+                  Varahi Tiffins uses frictionless WhatsApp Click-to-Chat deep links with prefilled order summaries. You can also configure Meta Cloud API for automated notifications.
+                </p>
+              </div>
+              <button class="btn-card-back js-admin-go-dashboard" onclick="Admin.switchTab('overview')" title="Back to Dashboard"><span>🏠</span> Dashboard</button>
+            </div>
 
             <div style="background: #FAF8F5; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
               <h4 style="font-weight: 700; color: #1E293B; margin-bottom: 8px;">Active Click-to-Chat Status:</h4>
