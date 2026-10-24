@@ -175,6 +175,7 @@ button {
   justify-content: space-between;
   padding: 8px 0;
   gap: 8px;
+  flex-wrap: nowrap;
 }
 
 @media (min-width: 480px) {
@@ -187,6 +188,7 @@ button {
 @media (min-width: 768px) {
   .header-inner {
     padding: 12px 0;
+    gap: 16px;
   }
 }
 
@@ -196,6 +198,7 @@ button {
   align-items: center;
   gap: 8px;
   min-width: 0;
+  flex-shrink: 1;
   text-decoration: none;
 }
 
@@ -233,38 +236,23 @@ button {
   min-width: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .brand-text h1 {
   font-family: var(--font-heading);
-  font-size: 1.05rem;
+  font-size: clamp(0.95rem, 3.2vw, 1.35rem);
   font-weight: 800;
   letter-spacing: -0.015em;
   color: var(--text-main);
   line-height: 1.15;
   white-space: nowrap;
-}
-
-@media (min-width: 390px) {
-  .brand-text h1 {
-    font-size: 1.12rem;
-  }
-}
-
-@media (min-width: 480px) {
-  .brand-text h1 {
-    font-size: 1.25rem;
-  }
-}
-
-@media (min-width: 992px) {
-  .brand-text h1 {
-    font-size: 1.38rem;
-  }
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .brand-tag {
-  font-size: 0.62rem;
+  font-size: clamp(0.58rem, 1.8vw, 0.68rem);
   color: var(--accent-green);
   font-weight: 700;
   text-transform: uppercase;
@@ -277,10 +265,10 @@ button {
   margin-top: 1px;
 }
 
-@media (min-width: 480px) {
-  .brand-tag {
-    font-size: 0.68rem;
-    gap: 4px;
+@media (max-width: 600px) {
+  .brand-category-desktop,
+  .brand-bullet {
+    display: none;
   }
 }
 
@@ -297,33 +285,46 @@ button {
 
 .nav-links {
   display: flex;
-  gap: 24px;
+  align-items: center;
+  gap: clamp(8px, 1.4vw, 20px);
   list-style: none;
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
 }
 
 .nav-links a {
   color: var(--text-secondary);
   transition: var(--transition);
   position: relative;
-  padding: 4px 0;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
 }
 
-.nav-links a:hover,
+.nav-links a:hover {
+  color: var(--primary);
+  background: rgba(217, 119, 6, 0.08);
+}
+
 .nav-links a.active {
   color: var(--primary);
+  background: var(--primary-light);
+  font-weight: 700;
+  box-shadow: 0 1px 4px rgba(217, 119, 6, 0.15);
 }
 
 .nav-links a.active::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 3px;
   background: var(--primary);
-  border-radius: 2px;
+  border-radius: 3px;
 }
 
 /* Header Action Controls */

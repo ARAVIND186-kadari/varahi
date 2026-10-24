@@ -150,6 +150,7 @@ const Admin = {
     if (initialHash && ['overview', 'orders', 'menu', 'feedback', 'settings', 'whatsapp'].includes(initialHash)) {
       this.currentTab = initialHash;
     }
+  },
 
   toggleSidebar(open) {
     const sidebar = document.querySelector('.admin-sidebar');

@@ -1,5 +1,15 @@
 // Varahi Tiffins - Main Application Controller
 
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 const App = {
   settings: null,
   menu: [],
@@ -152,19 +162,84 @@ const App = {
       });
     });
 
-    // Smooth scroll for internal links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    // Active state and scrollspy for desktop & mobile navigation
+    this.setupNavigationTracking();
+  },
+
+  setupNavigationTracking() {
+    const desktopLinks = document.querySelectorAll('.desktop-nav .nav-links a');
+    const mobileLinks = document.querySelectorAll('.mobile-nav-links .mobile-nav-link');
+    const sections = ['hero', 'menu', 'reviews', 'contact'].map(id => document.getElementById(id)).filter(Boolean);
+
+    const updateActiveNav = (targetId) => {
+      desktopLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === '#' + targetId || (targetId === 'hero' && href === '#hero')) {
+          link.classList.add('active');
+        } else if (href && href.startsWith('#')) {
+          link.classList.remove('active');
+        }
+      });
+
+      mobileLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === '#' + targetId || (targetId === 'hero' && href === '#hero')) {
+          link.classList.add('active');
+        } else if (href && href.startsWith('#')) {
+          link.classList.remove('active');
+        }
+      });
+    };
+
+    // Smooth scroll and immediate active state feedback on click
+    document.querySelectorAll('.desktop-nav .nav-links a, .mobile-nav-links .mobile-nav-link, a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
-        const targetId = this.getAttribute('href');
-        if (targetId && targetId !== '#') {
-          const targetEl = document.querySelector(targetId);
+        const href = this.getAttribute('href');
+        if (href && href.startsWith('#') && href.length > 1) {
+          const targetId = href.substring(1);
+          const targetEl = document.getElementById(targetId);
           if (targetEl) {
             e.preventDefault();
-            targetEl.scrollIntoView({ behavior: 'smooth' });
+            updateActiveNav(targetId);
+            const headerEl = document.querySelector('.header');
+            const headerHeight = headerEl ? headerEl.offsetHeight : 70;
+            const elementPosition = targetEl.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+            window.scrollTo({
+              top: Math.max(0, offsetPosition),
+              behavior: 'smooth'
+            });
           }
         }
       });
     });
+
+    // Scrollspy using IntersectionObserver
+    if ('IntersectionObserver' in window && sections.length > 0) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            updateActiveNav(entry.target.id);
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: '-20% 0px -55% 0px',
+        threshold: 0
+      });
+
+      sections.forEach(sec => observer.observe(sec));
+    } else {
+      window.addEventListener('scroll', () => {
+        const scrollPos = window.scrollY + 120;
+        for (const sec of sections) {
+          if (sec.offsetTop <= scrollPos && (sec.offsetTop + sec.offsetHeight) > scrollPos) {
+            updateActiveNav(sec.id);
+            break;
+          }
+        }
+      }, { passive: true });
+    }
   },
 
   renderMenu() {
@@ -187,17 +262,19 @@ const App = {
 
     grid.innerHTML = items.map(item => {
       const isOutOfStock = !item.inStock || (item.stockQuantity !== undefined && item.stockQuantity <= 0);
+      const imgPath = item.image || '/assets/images/ghee-karam-dosa.jpg';
       return `
         <div class="dish-card" data-id="${item.id}">
-          <div class="dish-card-header">
-            <div>
-              <div class="dish-badges">
-                <span class="veg-badge" title="100% Pure Vegetarian"></span>
-                ${item.isSpecial ? '<span class="special-badge">★ Chef’s Special</span>' : ''}
-                <span class="spice-tag">${escapeHtml(item.spiceLevel || 'Mild')}</span>
-              </div>
-              <h3 class="dish-title">${escapeHtml(item.name)}</h3>
+          <div class="dish-image-wrapper">
+            <img class="dish-image" src="${escapeHtml(imgPath)}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.onerror=null; this.src='/assets/images/ghee-karam-dosa.jpg';">
+            <div class="dish-image-overlay">
+              <span class="veg-badge" title="100% Pure Vegetarian"></span>
+              ${item.isSpecial ? '<span class="special-badge">★ Chef’s Special</span>' : ''}
+              <span class="spice-tag">${escapeHtml(item.spiceLevel || 'Mild')}</span>
             </div>
+          </div>
+          <div class="dish-card-header">
+            <h3 class="dish-title">${escapeHtml(item.name)}</h3>
             <div class="dish-price">₹${item.price}</div>
           </div>
           <div class="dish-card-body">
