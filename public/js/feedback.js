@@ -6,6 +6,10 @@ const Feedback = {
   init() {
     this.bindEvents();
     this.loadPublicReviews();
+    // Auto-refresh reviews every 10 seconds so newly approved reviews appear without manual refresh
+    setInterval(() => {
+      this.loadPublicReviews();
+    }, 10000);
   },
 
   bindEvents() {
@@ -156,7 +160,9 @@ const Feedback = {
       this.selectedRating = 5;
       this.highlightStars(5);
 
-      showFeedbackConfirmationSuccess(data.feedbackId, data.isOrderVerified);
+      showFeedbackConfirmationSuccess(data.feedbackId, data.isOrderVerified, data.status);
+      // Immediately reload public reviews without requiring page refresh
+      this.loadPublicReviews();
     } catch (err) {
       console.error('Feedback submit error:', err);
       showToast('A network error occurred. Please try again.', 'error');
@@ -291,25 +297,29 @@ const Feedback = {
   }
 };
 
-function showFeedbackConfirmationSuccess(feedbackId, isOrderVerified) {
+function showFeedbackConfirmationSuccess(feedbackId, isOrderVerified, status = 'pending') {
+  const isApproved = status === 'approved';
   const modalHtml = `
     <div class="modal-overlay active" id="feedbackSuccessModal">
       <div class="modal-dialog" style="max-width: 480px; text-align: center;">
         <div class="modal-header">
-          <h3>Feedback Received!</h3>
+          <h3>${isApproved ? 'Review Published!' : 'Feedback Received!'}</h3>
           <button class="btn-close-drawer" onclick="document.getElementById('feedbackSuccessModal').remove()">&times;</button>
         </div>
         <div class="modal-body">
           <div style="font-size: 3rem; margin-bottom: 12px; color: #10B981;">✓</div>
           <h4 style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;">
-            Thank You for Your Valuable Review!
+            ${isApproved ? 'Your Review is Live!' : 'Thank You for Your Valuable Review!'}
           </h4>
           <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
-            Your feedback (Ref: <strong>#${feedbackId}</strong>) has been securely saved. Our management reviews all feedback to maintain our quality standards.
-            ${isOrderVerified ? '<br><span style="color: #059669; font-weight: 600;">Your order reference was verified!</span>' : ''}
+            ${isApproved
+              ? `Your review has been verified and published immediately on our website! Thank you for sharing your experience.`
+              : `Your feedback (Ref: <strong>#${feedbackId}</strong>) has been securely saved. It will appear on our public reviews section once approved by our moderation team.`
+            }
+            ${isOrderVerified ? '<br><span style="color: #059669; font-weight: 600;">✓ Your order reference was verified!</span>' : ''}
           </p>
           <div style="background: #F1F5F9; border-radius: 8px; padding: 12px; font-size: 0.82rem; color: #475569; text-align: left; margin-bottom: 20px;">
-            🔒 <strong>Privacy Notice:</strong> Your personal contact information is never displayed publicly. Only your review and chosen display name appear once approved by our moderation team.
+            🔒 <strong>Privacy Notice:</strong> Your personal contact information (email/phone) is never displayed publicly. Only your review and chosen display name appear.
           </div>
           <button class="btn-primary" style="width: 100%; padding: 12px;" onclick="document.getElementById('feedbackSuccessModal').remove()">
             Back to Website
@@ -319,5 +329,7 @@ function showFeedbackConfirmationSuccess(feedbackId, isOrderVerified) {
     </div>
   `;
 
+  const existing = document.getElementById('feedbackSuccessModal');
+  if (existing) existing.remove();
   document.body.insertAdjacentHTML('beforeend', modalHtml);
 }

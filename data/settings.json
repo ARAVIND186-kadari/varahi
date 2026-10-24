@@ -15,5 +15,6 @@
     "phoneNumberId": "",
     "accessToken": "",
     "webhookVerified": false
-  }
+  },
+  "autoApproveReviews": false
 }

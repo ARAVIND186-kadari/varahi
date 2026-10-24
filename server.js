@@ -20,7 +20,7 @@ function rateLimitMiddleware(req, res, next) {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
   const now = Date.now();
   const windowMs = 15 * 60 * 1000; // 15 minutes
-  const maxAttempts = 6;
+  const maxAttempts = 40; // Generous limit for testing & customer usage
 
   const userRecord = feedbackRateLimit.get(ip) || { count: 0, resetTime: now + windowMs };
 
@@ -92,6 +92,7 @@ app.get('/api/settings', (req, res) => {
       deliveryFee: settings.deliveryFee,
       packagingFee: settings.packagingFee,
       taxPercentage: settings.taxPercentage,
+      autoApproveReviews: !!settings.autoApproveReviews,
       enableWhatsAppApi: !!settings.enableWhatsAppApi
     };
     res.json(publicSettings);
@@ -286,9 +287,13 @@ app.post('/api/feedback', rateLimitMiddleware, (req, res) => {
       orderRef
     });
 
+    const isApproved = newFeedback.status === 'approved';
     res.status(201).json({
       success: true,
-      message: 'Thank you for your valuable feedback! Your review has been submitted for moderation and will appear publicly once approved.',
+      status: newFeedback.status,
+      message: isApproved
+        ? 'Thank you for your valuable feedback! Your review is now published on our website.'
+        : 'Thank you for your valuable feedback! Your review has been submitted for moderation and will appear publicly once approved by our team.',
       feedbackId: newFeedback.id,
       isOrderVerified: newFeedback.isOrderVerified
     });
@@ -336,6 +341,7 @@ app.put('/api/admin/settings', requireAdmin, (req, res) => {
       deliveryFee,
       packagingFee,
       taxPercentage,
+      autoApproveReviews,
       enableWhatsAppApi,
       whatsAppApiConfig
     } = req.body;
@@ -352,6 +358,7 @@ app.put('/api/admin/settings', requireAdmin, (req, res) => {
     if (deliveryFee !== undefined) updates.deliveryFee = Number(deliveryFee);
     if (packagingFee !== undefined) updates.packagingFee = Number(packagingFee);
     if (taxPercentage !== undefined) updates.taxPercentage = Number(taxPercentage);
+    if (autoApproveReviews !== undefined) updates.autoApproveReviews = Boolean(autoApproveReviews);
     if (enableWhatsAppApi !== undefined) updates.enableWhatsAppApi = Boolean(enableWhatsAppApi);
     if (whatsAppApiConfig) updates.whatsAppApiConfig = whatsAppApiConfig;
 

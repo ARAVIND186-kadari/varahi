@@ -1,5 +1,51 @@
 // Varahi Tiffins - Admin Portal Controller
 
+// Safe HTML Escape Utility
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/[&<>'"]/g, 
+    tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+  );
+}
+
+// Global Toast Notification Helper for Admin Dashboard
+function showToast(message, type = 'success') {
+  let container = document.getElementById('toastContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toastContainer';
+    container.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none;';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  const borderColor = type === 'success' ? '#10B981' : (type === 'error' ? '#EF4444' : '#F59E0B');
+  toast.style.cssText = `
+    background: #1E293B;
+    color: #FFFFFF;
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-left: 4px solid ${borderColor};
+    pointer-events: auto;
+    animation: toastSlideIn 0.25s ease forwards;
+  `;
+  toast.innerHTML = `<span>${type === 'success' ? '✓' : '⚠️'}</span><span>${escapeHtml(message)}</span>`;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(10px)';
+    toast.style.transition = 'all 0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
 const Admin = {
   token: null,
   currentTab: 'overview',
@@ -16,6 +62,15 @@ const Admin = {
       this.showLogin();
     }
     this.bindEvents();
+
+    // Live auto-refresh interval for orders and feedback (every 10 seconds)
+    setInterval(() => {
+      if (this.token && document.getElementById('adminDashboardView').style.display !== 'none') {
+        if (this.currentTab === 'overview') this.loadOverview();
+        if (this.currentTab === 'orders') this.loadOrders();
+        if (this.currentTab === 'feedback') this.loadFeedback();
+      }
+    }, 10000);
   },
 
   bindEvents() {
@@ -83,6 +138,7 @@ const Admin = {
       this.token = data.token;
       sessionStorage.setItem('varahi_admin_token', this.token);
       this.showDashboard();
+      showToast('Welcome to Varahi Tiffins Admin Workspace', 'success');
     } catch (err) {
       if (errorEl) {
         errorEl.textContent = 'Server connection error';
@@ -154,17 +210,28 @@ const Admin = {
         fetch('/api/menu')
       ]);
 
+      if (ordersRes.status === 401 || ordersRes.status === 403) {
+        this.handleLogout();
+        return;
+      }
+
       const orders = await ordersRes.json();
       const fbData = await feedbackRes.json();
       const menu = await menuRes.json();
 
-      document.getElementById('statTotalOrders').textContent = orders.length;
-      document.getElementById('statWhatsAppOrders').textContent = orders.filter(o => o.channel === 'whatsapp').length;
-      document.getElementById('statAvgRating').textContent = fbData.stats ? `${fbData.stats.averageRating} ★` : '0.0 ★';
-      document.getElementById('statPendingReviews').textContent = fbData.pendingCount || 0;
+      const totalOrdersEl = document.getElementById('statTotalOrders');
+      const waOrdersEl = document.getElementById('statWhatsAppOrders');
+      const avgRatingEl = document.getElementById('statAvgRating');
+      const pendingReviewsEl = document.getElementById('statPendingReviews');
+      const outOfStockEl = document.getElementById('statOutOfStock');
+
+      if (totalOrdersEl) totalOrdersEl.textContent = Array.isArray(orders) ? orders.length : 0;
+      if (waOrdersEl) waOrdersEl.textContent = Array.isArray(orders) ? orders.filter(o => o.channel === 'whatsapp').length : 0;
+      if (avgRatingEl) avgRatingEl.textContent = fbData.stats ? `${fbData.stats.averageRating} ★` : '0.0 ★';
+      if (pendingReviewsEl) pendingReviewsEl.textContent = fbData.pendingCount || 0;
       
-      const outOfStockCount = menu.filter(m => !m.inStock || m.stockQuantity === 0).length;
-      document.getElementById('statOutOfStock').textContent = outOfStockCount;
+      const outOfStockCount = Array.isArray(menu) ? menu.filter(m => !m.inStock || m.stockQuantity === 0).length : 0;
+      if (outOfStockEl) outOfStockEl.textContent = outOfStockCount;
 
       // Update sidebar badges
       const fbBadge = document.getElementById('badgePendingFeedback');
@@ -176,17 +243,17 @@ const Admin = {
       // Render recent activity preview
       const recentOrdersEl = document.getElementById('overviewRecentOrders');
       if (recentOrdersEl) {
-        const top5 = orders.slice(0, 5);
-        if (top5.length === 0) {
-          recentOrdersEl.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748B;">No orders recorded yet.</td></tr>`;
+        if (!Array.isArray(orders) || orders.length === 0) {
+          recentOrdersEl.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748B; padding: 24px;">No customer orders recorded yet.</td></tr>`;
         } else {
+          const top5 = orders.slice(0, 5);
           recentOrdersEl.innerHTML = top5.map(o => `
             <tr>
-              <td><strong>#${o.id}</strong></td>
+              <td><strong>#${escapeHtml(o.id)}</strong></td>
               <td>${escapeHtml(o.customerName)}</td>
               <td>₹${o.grandTotal}</td>
-              <td><span class="badge-status ${o.channel === 'whatsapp' ? 'approved' : 'pending'}">${o.channel.toUpperCase()}</span></td>
-              <td><span class="badge-status ${o.status.includes('Confirmed') ? 'approved' : 'pending'}">${o.status}</span></td>
+              <td><span class="badge-status ${o.channel === 'whatsapp' ? 'approved' : 'pending'}">${escapeHtml((o.channel || 'web').toUpperCase())}</span></td>
+              <td><span class="badge-status ${o.status && o.status.includes('Confirmed') ? 'approved' : 'pending'}">${escapeHtml(o.status || 'Received')}</span></td>
             </tr>
           `).join('');
         }
@@ -200,6 +267,10 @@ const Admin = {
   async loadOrders() {
     try {
       const res = await fetch('/api/admin/orders', { headers: this.getHeaders() });
+      if (res.status === 401 || res.status === 403) {
+        this.handleLogout();
+        return;
+      }
       this.orders = await res.json();
       this.renderOrdersTable(this.orders);
     } catch (err) {
@@ -211,8 +282,8 @@ const Admin = {
     const tableBody = document.getElementById('adminOrdersTableBody');
     if (!tableBody) return;
 
-    if (orders.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: #64748B;">No orders in database.</td></tr>`;
+    if (!Array.isArray(orders) || orders.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: #64748B;">No orders recorded in database.</td></tr>`;
       return;
     }
 
@@ -222,7 +293,7 @@ const Admin = {
       
       return `
         <tr>
-          <td><strong>#${o.id}</strong><br><small style="color: #64748B;">${dateStr}</small></td>
+          <td><strong>#${escapeHtml(o.id)}</strong><br><small style="color: #64748B;">${dateStr}</small></td>
           <td>
             <strong>${escapeHtml(o.customerName)}</strong><br>
             <small style="color: #64748B;">${escapeHtml(o.customerPhone || 'No phone')}</small>
@@ -239,7 +310,7 @@ const Admin = {
           </td>
           <td><strong>₹${o.grandTotal}</strong></td>
           <td>
-            <select class="admin-status-select" onchange="Admin.updateOrderStatus('${o.id}', this.value)" style="padding: 6px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem;">
+            <select class="admin-status-select" onchange="Admin.updateOrderStatus('${escapeHtml(o.id)}', this.value)" style="padding: 6px; border-radius: 6px; border: 1px solid #CBD5E1; font-size: 0.82rem;">
               <option value="Awaiting WhatsApp Confirmation" ${o.status === 'Awaiting WhatsApp Confirmation' ? 'selected' : ''}>Awaiting WhatsApp Confirmation</option>
               <option value="Confirmed" ${o.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
               <option value="Preparing" ${o.status === 'Preparing' ? 'selected' : ''}>Preparing</option>
@@ -327,7 +398,7 @@ const Admin = {
         headers: this.getHeaders(),
         body: JSON.stringify({ price: parseFloat(newPrice) })
       });
-      if (res.ok) showToast('Price updated!', 'success');
+      if (res.ok) showToast('Price updated successfully!', 'success');
     } catch (e) {
       showToast('Failed to update price', 'error');
     }
@@ -411,10 +482,20 @@ const Admin = {
   async loadFeedback() {
     try {
       const res = await fetch('/api/admin/feedback', { headers: this.getHeaders() });
+      if (res.status === 401 || res.status === 403) {
+        this.handleLogout();
+        return;
+      }
       const data = await res.json();
       this.feedbackList = data.feedback || [];
       this.renderFeedbackTable(this.feedbackList);
       this.renderFeedbackAnalytics(data);
+
+      const fbBadge = document.getElementById('badgePendingFeedback');
+      if (fbBadge) {
+        fbBadge.textContent = data.pendingCount || 0;
+        fbBadge.style.display = (data.pendingCount > 0) ? 'inline-block' : 'none';
+      }
     } catch (err) {
       console.error('Feedback load error:', err);
     }
@@ -472,7 +553,7 @@ const Admin = {
     const tableBody = document.getElementById('adminFeedbackTableBody');
     if (!tableBody) return;
 
-    if (feedback.length === 0) {
+    if (!Array.isArray(feedback) || feedback.length === 0) {
       tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 30px; color: #64748B;">No feedback submissions match filters.</td></tr>`;
       return;
     }
@@ -508,24 +589,24 @@ const Admin = {
             ` : ''}
           </td>
           <td>
-            <span class="badge-status ${item.status}">
-              ${item.status.toUpperCase()}
+            <span class="badge-status ${escapeHtml(item.status)}">
+              ${escapeHtml(item.status.toUpperCase())}
             </span>
           </td>
           <td><small style="color: #64748B;">${dateStr}</small></td>
           <td>
             <div style="display: flex; flex-direction: column; gap: 4px;">
               ${item.status !== 'approved' ? `
-                <button class="btn-action approve" onclick="Admin.moderateFeedback('${item.id}', 'approved')">
+                <button class="btn-action approve" onclick="Admin.moderateFeedback('${escapeHtml(item.id)}', 'approved')">
                   ✓ Approve
                 </button>
               ` : ''}
               ${item.status !== 'rejected' ? `
-                <button class="btn-action reject" onclick="Admin.moderateFeedback('${item.id}', 'rejected')">
+                <button class="btn-action reject" onclick="Admin.moderateFeedback('${escapeHtml(item.id)}', 'rejected')">
                   ✕ Reject
                 </button>
               ` : ''}
-              <button class="btn-action respond" onclick="Admin.openResponseModal('${item.id}', '${escapeHtml(item.customerName).replace(/'/g, "\\'")}')">
+              <button class="btn-action respond" onclick="Admin.openResponseModal('${escapeHtml(item.id)}', '${escapeHtml(item.customerName).replace(/'/g, "\\'")}')">
                 💬 Respond
               </button>
             </div>
@@ -625,17 +706,27 @@ const Admin = {
       const res = await fetch('/api/settings');
       this.settings = await res.json();
 
-      document.getElementById('setRestaurantName').value = this.settings.restaurantName || '';
-      document.getElementById('setCategory').value = this.settings.category || '';
-      document.getElementById('setPhone').value = this.settings.phone || '';
-      document.getElementById('setWhatsApp').value = this.settings.whatsapp || '';
-      document.getElementById('setAddress').value = this.settings.address || '';
-      document.getElementById('setGoogleMapsUrl').value = this.settings.googleMapsUrl || '';
-      document.getElementById('setOpeningHours').value = this.settings.openingHours || '';
-      document.getElementById('setStatusNote').value = this.settings.statusNote || '';
-      document.getElementById('setDeliveryFee').value = this.settings.deliveryFee || 30;
-      document.getElementById('setPackagingFee').value = this.settings.packagingFee || 15;
-      document.getElementById('setTaxPercentage').value = this.settings.taxPercentage || 5;
+      const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = (val !== undefined && val !== null) ? val : '';
+      };
+
+      setVal('setRestaurantName', this.settings.restaurantName);
+      setVal('setCategory', this.settings.category);
+      setVal('setPhone', this.settings.phone);
+      setVal('setWhatsApp', this.settings.whatsapp);
+      setVal('setAddress', this.settings.address);
+      setVal('setGoogleMapsUrl', this.settings.googleMapsUrl);
+      setVal('setOpeningHours', this.settings.openingHours);
+      setVal('setStatusNote', this.settings.statusNote);
+      setVal('setDeliveryFee', this.settings.deliveryFee);
+      setVal('setPackagingFee', this.settings.packagingFee);
+      setVal('setTaxPercentage', this.settings.taxPercentage);
+
+      const autoApproveEl = document.getElementById('setAutoApproveReviews');
+      if (autoApproveEl) {
+        autoApproveEl.checked = !!this.settings.autoApproveReviews;
+      }
     } catch (err) {
       console.error('Settings load error:', err);
     }
@@ -644,18 +735,24 @@ const Admin = {
   async handleSaveSettings(e) {
     e.preventDefault();
 
+    const getVal = (id, fallback = '') => {
+      const el = document.getElementById(id);
+      return el ? el.value : fallback;
+    };
+
     const updates = {
-      restaurantName: document.getElementById('setRestaurantName').value,
-      category: document.getElementById('setCategory').value,
-      phone: document.getElementById('setPhone').value,
-      whatsapp: document.getElementById('setWhatsApp').value,
-      address: document.getElementById('setAddress').value,
-      googleMapsUrl: document.getElementById('setGoogleMapsUrl').value,
-      openingHours: document.getElementById('setOpeningHours').value,
-      statusNote: document.getElementById('setStatusNote').value,
-      deliveryFee: Number(document.getElementById('setDeliveryFee').value),
-      packagingFee: Number(document.getElementById('setPackagingFee').value),
-      taxPercentage: Number(document.getElementById('setTaxPercentage').value)
+      restaurantName: getVal('setRestaurantName', 'Varahi Tiffins'),
+      category: getVal('setCategory', 'South Indian vegetarian restaurant'),
+      phone: getVal('setPhone', '+91 94945 00646'),
+      whatsapp: getVal('setWhatsApp', '919494500646'),
+      address: getVal('setAddress', ''),
+      googleMapsUrl: getVal('setGoogleMapsUrl', ''),
+      openingHours: getVal('setOpeningHours', ''),
+      statusNote: getVal('setStatusNote', ''),
+      deliveryFee: Number(getVal('setDeliveryFee', 30)),
+      packagingFee: Number(getVal('setPackagingFee', 15)),
+      taxPercentage: Number(getVal('setTaxPercentage', 5)),
+      autoApproveReviews: document.getElementById('setAutoApproveReviews') ? document.getElementById('setAutoApproveReviews').checked : false
     };
 
     try {
@@ -665,19 +762,22 @@ const Admin = {
         body: JSON.stringify(updates)
       });
 
+      const data = await res.json();
       if (res.ok) {
-        showToast('Restaurant details updated successfully! Live website refreshed.', 'success');
+        this.settings = data.settings;
+        showToast('Restaurant settings updated successfully! Live website refreshed.', 'success');
+        this.loadSettings();
       } else {
-        showToast('Failed to save settings', 'error');
+        showToast(data.error || 'Failed to save settings', 'error');
       }
     } catch (err) {
+      console.error('Settings save error:', err);
       showToast('Network error saving settings', 'error');
     }
   },
 
   // 6. WhatsApp Settings Tab
   loadWhatsAppSettings() {
-    // Optional Cloud API display
     const btnTest = document.getElementById('btnTestWhatsApp');
     if (btnTest) {
       btnTest.onclick = () => {

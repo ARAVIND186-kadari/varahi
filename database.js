@@ -25,6 +25,7 @@ const defaultSettings = {
   deliveryFee: 30,
   packagingFee: 15,
   taxPercentage: 5,
+  autoApproveReviews: false,
   enableWhatsAppApi: false,
   whatsAppApiConfig: {
     phoneNumberId: "",
@@ -440,6 +441,9 @@ const db = {
       }
     }
 
+    const settings = this.getSettings();
+    const initialStatus = feedbackData.status || (settings.autoApproveReviews ? 'approved' : 'pending');
+
     const newFeedback = {
       id,
       customerName: feedbackData.customerName.trim(),
@@ -450,7 +454,7 @@ const db = {
       suggestions: feedbackData.suggestions ? feedbackData.suggestions.trim() : null,
       orderRef: feedbackData.orderRef ? feedbackData.orderRef.trim() : null,
       isOrderVerified,
-      status: 'pending', // Pending moderation
+      status: initialStatus,
       adminResponse: null,
       createdAt: new Date().toISOString()
     };
