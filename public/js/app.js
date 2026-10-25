@@ -25,7 +25,7 @@ const App = {
 
   async loadSettings() {
     try {
-      const res = await fetch('${API_BASE_URL}/api/settings');
+      const res = await fetch(`${API_BASE_URL}/api/settings`);
       this.settings = await res.json();
       Cart.setSettings(this.settings);
       this.applySettingsToUI();
@@ -108,7 +108,7 @@ const App = {
 
   async loadMenu() {
     try {
-      const res = await fetch('${API_BASE_URL}/api/menu');
+      const res = await fetch(`${API_BASE_URL}/api/menu`);
       this.menu = await res.json();
       this.renderMenu();
     } catch (err) {
