@@ -1,5 +1,5 @@
 // Varahi Tiffins - Main Application Controller
-
+const API_BASE_URL = 'https://varahi-ckbu.onrender.com';
 function escapeHtml(str) {
   if (str === null || str === undefined) return '';
   return String(str)
@@ -25,7 +25,7 @@ const App = {
 
   async loadSettings() {
     try {
-      const res = await fetch('/api/settings');
+      const res = await fetch('${API_BASE_URL}/api/settings');
       this.settings = await res.json();
       Cart.setSettings(this.settings);
       this.applySettingsToUI();
@@ -108,7 +108,7 @@ const App = {
 
   async loadMenu() {
     try {
-      const res = await fetch('/api/menu');
+      const res = await fetch('${API_BASE_URL}/api/menu');
       this.menu = await res.json();
       this.renderMenu();
     } catch (err) {
@@ -193,7 +193,7 @@ const App = {
 
     // Smooth scroll and immediate active state feedback on click
     document.querySelectorAll('.desktop-nav .nav-links a, .mobile-nav-links .mobile-nav-link, a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
+      anchor.addEventListener('click', function (e) {
         const href = this.getAttribute('href');
         if (href && href.startsWith('#') && href.length > 1) {
           const targetId = href.substring(1);
